@@ -46,6 +46,23 @@ function minBy(numbers: number[], by: (v: number) => number): number {
 function stopPropagation(e: Event) {
   e.stopPropagation();
 }
+export function calculateNodeSpacing(
+  a: INode,
+  b: INode,
+  sameParent: boolean,
+  spacingVertical: number,
+  lineWidth: (node: INode) => number,
+): number {
+  const maxDepth = Math.max(a.state.depth, b.state.depth);
+  const depthSpacing = Math.max(0, maxDepth - 2) * 6;
+
+  return (
+    (sameParent ? spacingVertical : spacingVertical * 2) +
+    depthSpacing +
+    lineWidth(a) +
+    lineWidth(b)
+  );
+}
 
 /**
  * A global hook to refresh all markmaps when called.
@@ -237,9 +254,12 @@ export class Markmap {
         return [height, width + (width ? paddingX * 2 : 0) + spacingHorizontal];
       })
       .spacing((a, b) => {
-        return (
-          (a.parent === b.parent ? spacingVertical : spacingVertical * 2) +
-          lineWidth(a.data)
+        return calculateNodeSpacing(
+          a.data,
+          b.data,
+          a.parent === b.parent,
+          spacingVertical,
+          lineWidth,
         );
       });
     const tree = layout.hierarchy(this.state.data);
