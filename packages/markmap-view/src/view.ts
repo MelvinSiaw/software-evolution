@@ -46,6 +46,21 @@ function minBy(numbers: number[], by: (v: number) => number): number {
 function stopPropagation(e: Event) {
   e.stopPropagation();
 }
+/**
+ * Calculates the vertical spacing between two adjacent nodes in the mind map tree.
+ *
+ * The original spacing formula only accounted for line width, which caused nodes to
+ * overlap when the tree was deeply nested (4+ levels). This function fixes that by
+ * adding extra spacing proportional to the node depth, ensuring deeply nested branches
+ * remain visually separated and readable.
+ *
+ * @param a - The first node
+ * @param b - The second (adjacent) node
+ * @param sameParent - Whether both nodes share the same parent node
+ * @param spacingVertical - The base vertical spacing value from options
+ * @param lineWidth - A function that returns the line width for a given node
+ * @returns The total vertical spacing to apply between node a and node b
+ */
 export function calculateNodeSpacing(
   a: INode,
   b: INode,
@@ -53,10 +68,14 @@ export function calculateNodeSpacing(
   spacingVertical: number,
   lineWidth: (node: INode) => number,
 ): number {
+  // Use the deeper of the two nodes to determine how much extra spacing is needed
   const maxDepth = Math.max(a.state.depth, b.state.depth);
+
+  // Add 6px of extra spacing for every level beyond depth 2 to prevent overlap
   const depthSpacing = Math.max(0, maxDepth - 2) * 6;
 
   return (
+    // Nodes with different parents need more spacing to visually separate branches
     (sameParent ? spacingVertical : spacingVertical * 2) +
     depthSpacing +
     lineWidth(a) +
