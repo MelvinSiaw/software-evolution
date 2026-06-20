@@ -22,3 +22,23 @@ Markmap is also available in:
 ## Usage
 
 👉 [Read the documentation](https://markmap.js.org/docs) for more detail.
+
+### Prerequisites
+
+- Node.js (v24.x recommended)
+- `pnpm` (Package Manager)
+
+### Quick Start
+1. `git clone https://github.com/MelvinSiaw/software-evolution.git`
+2. `cd software-evolution`
+3. `pnpm install`
+4. `pnpm build`
+
+---
+
+## Contributing & Bug Reports
+This project follows standard maintenance practices.
+* **Found a bug?** Please use the provided **[Issue Template](.github/ISSUE_TEMPLATE/bug_report.md)** when creating a new issue.
+* **Before reporting:** Please ensure you have searched existing issues to see if the problem has already been documented.
+
+---
