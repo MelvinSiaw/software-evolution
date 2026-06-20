@@ -21,3 +21,14 @@
             - B Level 7 sibling two with long text that wraps
             - B Level 7 sibling three with long text that wraps
             - B Level 7 sibling four with long text that wraps
+
+- Branch C
+  - C Level 2
+    - C Level 3
+      - C Level 4
+        - C Level 5
+          - B Level 6
+            - C Level 7 sibling one with long text that wraps
+            - C Level 7 sibling two with long text that wraps
+            - C Level 7 sibling three with long text that wraps
+            - B Level 7 sibling four with long text that wraps
