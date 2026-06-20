@@ -27,7 +27,7 @@
   "scripts": {
     "clean": "del-cli dist tsconfig.tsbuildinfo",
     "build:types": "tsc",
-    "build:js": "vite build && pnpm fetch-assets",
+    "build:js": "vite build",
     "build": "pnpm clean && pnpm /^build:/",
     "fetch-assets": "node ./dist/fetch-assets.js",
     "prepublishOnly": "pnpm build"

@@ -138,18 +138,17 @@ export class Toolbar {
         'M4 4h12v2h-12zM4 9h8v2h-8zM4 14h10v2h-10zM14 11l4 4l-4 4v-3h-4v-2h4z',
       ),
       onClick: this.getHandler(async (mm) => {
-        // Serialize the SVG element to a string
         const svgEl = mm.svg.node() as SVGSVGElement;
         const serializer = new XMLSerializer();
         const svgStr = serializer.serializeToString(svgEl);
-        const blob = new Blob([svgStr], { type: 'image/svg+xml' });
-        const url = URL.createObjectURL(blob);
-        // Trigger download
+        const dataUrl =
+          'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
         const a = document.createElement('a');
-        a.href = url;
+        a.href = dataUrl;
         a.download = 'markmap.svg';
+        document.body.appendChild(a);
         a.click();
-        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
       }),
     });
     this.register({
@@ -159,20 +158,16 @@ export class Toolbar {
         'M3 5h14a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-14a1 1 0 0 1 -1 -1v-10a1 1 0 0 1 1 -1zM6 9a1.5 1.5 0 1 0 0 -3a1.5 1.5 0 0 0 0 3zM3 15l4 -4l3 3l2 -2l5 5z',
       ),
       onClick: this.getHandler(async (mm) => {
-        // Get the SVG element and its dimensions
         const svgEl = mm.svg.node() as SVGSVGElement;
         const { width, height } = svgEl.getBoundingClientRect();
         const serializer = new XMLSerializer();
         const svgStr = serializer.serializeToString(svgEl);
-        const svgBlob = new Blob([svgStr], { type: 'image/svg+xml' });
-        const svgUrl = URL.createObjectURL(svgBlob);
-        // Draw SVG onto a canvas then export as PNG
-        const img = new Image();
-        img.src = svgUrl;
+        const svgDataUrl =
+          'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgStr);
         await new Promise<void>((resolve) => {
+          const img = new Image();
           img.onload = () => {
             const canvas = document.createElement('canvas');
-            // Use 2x pixel ratio for a sharper export
             const scale = 2;
             canvas.width = width * scale;
             canvas.height = height * scale;
@@ -185,14 +180,16 @@ export class Toolbar {
               : '#ffffff';
             ctx.fillRect(0, 0, width, height);
             ctx.drawImage(img, 0, 0, width, height);
-            URL.revokeObjectURL(svgUrl);
-            // Trigger download
             const a = document.createElement('a');
             a.href = canvas.toDataURL('image/png');
             a.download = 'markmap.png';
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
             resolve();
           };
+          img.onerror = () => resolve();
+          img.src = svgDataUrl;
         });
       }),
     });
